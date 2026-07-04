@@ -25,7 +25,13 @@ export default function OwnerLogin({ setCurrentUser, setActivePage }: OwnerLogin
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })
       });
-      const data = await response.json();
+      const responseText = await response.text();
+      let data: any = {};
+      try {
+        data = responseText ? JSON.parse(responseText) : {};
+      } catch {
+        throw new Error(`API returned ${response.status}: ${responseText.slice(0, 120)}`);
+      }
       if (response.ok && data.user?.role === "OWNER") {
         setCurrentUser(data.user);
         localStorage.setItem("skl_user", JSON.stringify(data.user));
@@ -35,7 +41,7 @@ export default function OwnerLogin({ setCurrentUser, setActivePage }: OwnerLogin
       }
     } catch (err) {
       console.error(err);
-      setErrorMsg("Network failure authenticating secure owner access.");
+      setErrorMsg(err instanceof Error ? err.message : "Network failure authenticating secure owner access.");
     } finally {
       setLoading(false);
     }
