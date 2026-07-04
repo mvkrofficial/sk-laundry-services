@@ -940,7 +940,7 @@ async function startServer() {
   });
 }
 
-if (process.env.VERCEL !== "1") {
+if (!process.env.VERCEL && !process.env.VERCEL_API_BUILD) {
   startServer();
 }
 

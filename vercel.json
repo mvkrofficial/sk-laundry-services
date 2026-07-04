@@ -1,6 +1,26 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "builds": [
+    {
+      "src": "api/index.cjs",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": "dist/server.cjs"
+      }
+    },
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
   "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.cjs"
+    },
     {
       "handle": "filesystem"
     },
