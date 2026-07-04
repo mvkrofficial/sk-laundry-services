@@ -502,8 +502,11 @@ app.post("/api/auth/login", async (req, res) => {
       return res.status(400).json({ error: "Please enter your credentials." });
     }
 
+    const loginId = String(email).trim();
+    const loginPassword = String(password).trim();
+
     // Check if owner login
-    if (email === "Sklaundry_3375" && password === (database.ownerPassword || "Kalpana@3375")) {
+    if (loginId.toLowerCase() === "sklaundry_3375" && loginPassword === String(database.ownerPassword || "Kalpana@3375").trim()) {
       const owner = database.users.find(u => u.role === "OWNER") || {
         id: "u-owner",
         name: "SK Laundry Owner",
@@ -518,7 +521,7 @@ app.post("/api/auth/login", async (req, res) => {
       return res.json({ success: true, user: owner, token });
     }
 
-    const customer: any = database.users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.role === "CUSTOMER");
+    const customer: any = database.users.find(u => u.email.toLowerCase() === loginId.toLowerCase() && u.role === "CUSTOMER");
     if (!customer) {
       return res.status(401).json({ error: "Invalid credentials or customer not registered." });
     }
@@ -528,7 +531,7 @@ app.post("/api/auth/login", async (req, res) => {
     }
 
     if (customer.password) {
-      const isMatch = await bcrypt.compare(password, customer.password);
+      const isMatch = await bcrypt.compare(loginPassword, customer.password);
       if (!isMatch) {
         return res.status(401).json({ error: "Invalid credentials or customer not registered." });
       }
