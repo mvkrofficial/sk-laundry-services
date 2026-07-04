@@ -1,0 +1,11 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[user]
+	email = nikil090608@gmail.com
+	name = nikil090608
+[remote "origin"]
+	url = https://github.com/nikil090608-droid/SK-Laundry-Services.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
